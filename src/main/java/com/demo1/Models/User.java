@@ -13,13 +13,13 @@ public class User {
         TELLER, MANAGER, ADMIN, AUDITOR
     }
 
-    public User( String name, String email, String password, Role role) {
-        Id = UUID.randomUUID();
-        Name = name;
-        Email = email;
-        Password = password;
-        this.role = role;
-    }
+//    public User( String name, String email, String password, Role role) {
+//        Id = UUID.randomUUID();
+//        Name = name;
+//        Email = email;
+//        Password = password;
+//        this.role = role;
+//    }
 
     public UUID getId() {
         return Id;

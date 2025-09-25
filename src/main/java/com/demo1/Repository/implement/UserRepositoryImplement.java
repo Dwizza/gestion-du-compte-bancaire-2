@@ -18,15 +18,15 @@ public class UserRepositoryImplement implements UserRepository {
 
     public void save(User user){
 
-        String sql = "INSERT INTO users (id, full_name, email, password, role) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)";
         try(Connection conn = DatabaseConfig.getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, String.valueOf(user.getId()));
+            pstmt.setObject(1, user.getId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getEmail());
             pstmt.setString(4, user.getPassword());
-            pstmt.setString(5, user.getRole().name());
+            pstmt.setString(5, user.getRole().name().toUpperCase());
 
             pstmt.execute();
             System.out.println("User Saved Successfully");
@@ -47,12 +47,14 @@ public class UserRepositoryImplement implements UserRepository {
 
              ResultSet rs = pstmt.executeQuery();
              if(rs.next()){
-                 return new User(
-                         rs.getString("Name"),
-                         rs.getString("Email"),
-                         rs.getString("Password"),
-                         User.Role.valueOf(rs.getString("Role"))
-                 );
+                 User user = new User();
+
+                         user.setName(rs.getString("Name"));
+                         user.setEmail(rs.getString("Email"));
+                         user.setPassword(rs.getString("Password"));
+                         user.setRole(User.Role.valueOf(rs.getString("Role")));
+
+                 return user;
              }
 
          } catch (Exception e) {

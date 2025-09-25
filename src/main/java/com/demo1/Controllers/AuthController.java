@@ -1,9 +1,11 @@
 package com.demo1.Controllers;
 
+import com.demo1.Menus;
 import com.demo1.Models.User;
 import com.demo1.Services.AuthService;
 import com.demo1.Services.impliment.AuthServiceImplement;
 
+import java.awt.*;
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
@@ -29,45 +31,30 @@ public class AuthController {
 
                  switch (loggedIn.getRole()) {
                      case ADMIN:
-                         System.out.println("1. Gestion utilisateurs");
-                         System.out.println("2. Configuration système");
-                         System.out.println("3. Clôture forcée de comptes");
-                         System.out.println("4. Modifier paramètres globaux");
-                         System.out.println("5. Consulter toutes les opérations");
-                         System.out.println("0. Quitter");
-
+                         Menus.showAdminMenu();
                          System.out.print("choice: ");
-                         int choice = scanner.nextInt();
-
-
-
-                     case MANAGER:
-                         System.out.println("1. Consulter clients");
-                         System.out.println("2. Consulter comptes");
-                         System.out.println("3. Valider clôture de compte");
-                         System.out.println("4. Valider crédits");
-                         System.out.println("5. Valider virements externes");
-                         System.out.println("6. Suivi transactions");
-                         System.out.println("0. Quitter");
+                         int choice1 = scanner.nextInt();
+                         Menus.choiceMenuAdmin(choice1);
+                         break;
+                     case TELLER:
+                         Menus.showTellerMenu();
+                         System.out.println("choice: ");
+                         int choice2 = scanner.nextInt();
+                         Menus.choiceMenuTeller(choice2);
                          break;
 
-                     case TELLER:
-                         System.out.println("1. Créer un client");
-                         System.out.println("2. Consulter un client");
-                         System.out.println("3. Dépôt d’argent");
-                         System.out.println("4. Retrait d’argent");
-                         System.out.println("5. Virement interne");
-                         System.out.println("6. Demande de crédit");
-                         System.out.println("0. Quitter");
+                     case MANAGER:
+                         Menus.showManagerMenu();
+                         System.out.println("choice: ");
+                         int choice3 = scanner.nextInt();
+                         Menus.choiceMenuManager(choice3);
                          break;
 
                      case AUDITOR:
-                         System.out.println("1. Consulter clients");
-                         System.out.println("2. Consulter comptes");
-                         System.out.println("3. Consulter transactions");
-                         System.out.println("4. Consulter crédits");
-                         System.out.println("5. Générer rapports d’audit");
-                         System.out.println("0. Quitter");
+                         Menus.showAuditorMenu();
+                         System.out.println("choice: ");
+                         int choice4 = scanner.nextInt();
+                         Menus.choiceMenuAuditor(choice4);
                          break;
                  }
              }
