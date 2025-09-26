@@ -60,6 +60,9 @@ public class Menus {
             case 3:
                 UserController.deleteUser();
                 break;
+            default:
+                showAdminMenu();
+                break;
         }
 
     }

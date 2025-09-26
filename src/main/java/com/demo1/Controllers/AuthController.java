@@ -60,6 +60,7 @@ public class AuthController {
              }
          } else {
              System.out.println("Login failed !");
+             Login();
          }
 
          scanner.close();

@@ -21,12 +21,33 @@ public class UserServiceImplement implements UserService {
         user.setRole(role);
 
         try{
-            userRepository.save(user);
-            System.out.println("User created successfully !");
+            userRepository.saveUser(user);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+    }
 
+    public User findUser(String email){
+        User user = userRepository.FindByEmail(email);
+        if(user != null){
+           return user;
+        }else {
+            return null;
+        }
+    }
+
+    public void editUser(String name,String email,String password, User.Role role, String recentEmail){
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(role);
+
+        userRepository.editUser(user, recentEmail);
+    }
+
+    public void deleteUser(User user){
+        userRepository.deleteUser(user);
     }
 
 }

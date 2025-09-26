@@ -35,6 +35,9 @@ public class Main {
                 System.out.println("Good bye!");
                 System.exit(0);
                 break;
+            default:
+                showLoginMenu();
+                break;
         }
     }
 
