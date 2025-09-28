@@ -1,115 +1,161 @@
 package com.demo1;
 
-import com.demo1.Controllers.AuthController;
-import com.demo1.Controllers.ClientController;
 import com.demo1.Controllers.UserController;
-import com.demo1.Models.User;
+import com.demo1.Controllers.ClientController;
+import com.demo1.Views.View;
 
 import java.util.Scanner;
 
 public class Menus {
 
-    private static  Scanner sc = new Scanner(System.in);
+    private static final Scanner SCANNER = new Scanner(System.in);
 
-    public static void showLoginMenu() {
-        System.out.println("=====Menu Principale======");
-        System.out.println("1. Login");
-        System.out.println("2. Exit");
-        System.out.print("Your choice: ");
-
-        String choice = sc.nextLine();
-
-        switch (choice) {
-            case "1":
-                AuthController.Login();
-                break;
-            case "2":
-                System.out.println("Good bye!");
-                System.exit(0);
-                break;
-            default:
-                showLoginMenu();
-                break;
-        }
+    public static void showAdminMenu() {
+        View.showAdminMenu();
     }
 
-    public static void showAdminMenu(){
-        System.out.println("1. Create User");
-        System.out.println("2. Edit User");
-        System.out.println("3. Delete User");
-        System.out.println("4. Create Client");
-        System.out.println("5. Show All Users");
-        System.out.println("6. View All Operations");
-        System.out.println("0. Exit");
+    public static void showTellerMenu() {
+        View.showTellerMenu();
     }
 
-    public static void showTellerMenu(){
-        System.out.println("1. Create Client");
-        System.out.println("2. View Client");
-        System.out.println("3. Deposit Money");
-        System.out.println("4. Withdraw Money");
-        System.out.println("5. Internal Transfer");
-        System.out.println("6. Credit Request");
-        System.out.println("0. Exit");
+    public static void showManagerMenu() {
+        View.showManagerMenu();
     }
 
-    public static void showManagerMenu(){
-        System.out.println("1. View Clients");
-        System.out.println("2. View Accounts");
-        System.out.println("3. Approve Account Closure");
-        System.out.println("4. Approve Credits");
-        System.out.println("5. Approve External Transfers");
-        System.out.println("6. Monitor Transactions");
-        System.out.println("0. Exit");
+    public static void showAuditorMenu() {
+        View.showAuditorMenu();
     }
 
-    public static void showAuditorMenu(){
-        System.out.println("1. View Clients");
-        System.out.println("2. View Accounts");
-        System.out.println("3. View Transactions");
-        System.out.println("4. View Credits");
-        System.out.println("5. Generate Audit Reports");
-        System.out.println("0. Exit");
-    }
-
-
-    public static void choiceMenuAdmin(int ms){
-        switch(ms){
+    public static void choiceMenuAdmin(int ms) {
+        switch (ms) {
             case 1:
-                UserController.createUser();
+                // User Management sub-menu
+                View.showUserManagementMenu();
+                System.out.print("choice: ");
+                int sub = readInt();
+                switch (sub) {
+                    case 1 -> UserController.createUser();
+                    case 2 -> UserController.editUser();
+                    case 3 -> UserController.deleteUser();
+                    case 4 -> UserController.listUsers();
+                    case 9 -> { /* back */ }
+                    case 0 -> { System.out.println("Exit"); System.exit(0);}
+                    default -> View.showUserManagementMenu();
+                }
                 break;
             case 2:
-                UserController.editUser();
+                // Client Management sub-menu (Admin)
+                View.showClientManagementMenu();
+                System.out.print("choice: ");
+                int sub2 = readInt();
+                switch (sub2) {
+                    case 1 -> ClientController.saveClient();
+                    case 2 -> ClientController.editClient();
+                    case 3 -> ClientController.deleteClient();
+                    case 4 -> ClientController.listClients();
+                    case 9 -> { /* back */ }
+                    case 0 -> { System.out.println("Exit"); System.exit(0);}
+                    default -> View.showClientManagementMenu();
+                }
                 break;
             case 3:
-                UserController.deleteUser();
+                // System configuration (to implement)
                 break;
             case 4:
-                ClientController.saveClient();
+                // Force account closure (to implement with MANAGER validation)
                 break;
             case 5:
-                UserController.findUser();
+                // View all operations (to implement)
                 break;
             case 0:
-                System.out.println("Exit!");
+                System.out.println("Exit");
                 System.exit(0);
+                break;
+            case 9:
+                // Back
+                break;
             default:
                 showAdminMenu();
                 break;
         }
-
     }
 
-    public static void choiceMenuTeller(int ms){
-
+    public static void choiceMenuTeller(int ms) {
+        switch (ms) {
+            case 1:
+                // Client Management sub-menu
+                View.showClientManagementMenu();
+                System.out.print("choice: ");
+                int sub = readInt();
+                switch (sub) {
+                    case 1 -> ClientController.saveClient();
+                    case 2 -> ClientController.editClient();
+                    case 3 -> ClientController.deleteClient();
+                    case 4 -> ClientController.listClients();
+                    case 9 -> { /* back */ }
+                    case 0 -> { System.out.println("Exit"); System.exit(0);}
+                    default -> View.showClientManagementMenu();
+                }
+                break;
+            case 2:
+                // Deposit
+                break;
+            case 3:
+                // Withdraw
+                break;
+            case 4:
+                // Internal transfer
+                break;
+            case 5:
+                // Credit request
+                break;
+            case 9:
+                // Back
+                break;
+            case 0:
+                System.out.println("Exit");
+                System.exit(0);
+                break;
+            default:
+                showTellerMenu();
+                break;
+        }
     }
 
-    public static void choiceMenuManager(int ms){
-
+    public static void choiceMenuManager(int ms) {
+        switch (ms) {
+            case 1 -> { /* View clients */ }
+            case 2 -> { /* View accounts */ }
+            case 3 -> { /* Approve account closure */ }
+            case 4 -> { /* Approve credits */ }
+            case 5 -> { /* Approve external transfers */ }
+            case 6 -> { /* Monitor transactions */ }
+            case 9 -> { /* Back */ }
+            case 0 -> { System.out.println("Exit"); System.exit(0);}
+            default -> showManagerMenu();
+        }
     }
 
-    public static void choiceMenuAuditor(int ms){
-
+    public static void choiceMenuAuditor(int ms) {
+        switch (ms) {
+            case 1 -> { /* View clients */ }
+            case 2 -> { /* View accounts */ }
+            case 3 -> { /* View transactions */ }
+            case 4 -> { /* View credits */ }
+            case 5 -> { /* Generate audit report */ }
+            case 9 -> { /* Back */ }
+            case 0 -> { System.out.println("Exit"); System.exit(0);}
+            default -> showAuditorMenu();
+        }
     }
 
+    private static int readInt() {
+        while (true) {
+            try {
+                return Integer.parseInt(SCANNER.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid number, try again: ");
+            }
+        }
+    }
 }

@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class UserRepositoryImplement implements UserRepository {
 
+    @Override
     public void saveUser(User user){
 
         String sql = "INSERT INTO users (id, name, email, password, role) VALUES (?, ?, ?, ?, ?)";
@@ -28,16 +29,17 @@ public class UserRepositoryImplement implements UserRepository {
             pstmt.setString(5, user.getRole().name().toUpperCase());
 
             pstmt.execute();
-            System.out.println("User created Successfully");
+
 
         }catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
 
     }
 
-    public User FindByEmail(String email){
+    @Override
+    public User findByEmail(String email){
 
          String sql =  "SELECT * FROM users WHERE email = ?";
          try(Connection conn = DatabaseConfig.getConnection()){
@@ -47,11 +49,11 @@ public class UserRepositoryImplement implements UserRepository {
              ResultSet rs = pstmt.executeQuery();
              if(rs.next()){
                  User user = new User();
-                        user.setId(UUID.fromString(rs.getString("Id")));
-                         user.setName(rs.getString("Name"));
-                         user.setEmail(rs.getString("Email"));
-                         user.setPassword(rs.getString("Password"));
-                         user.setRole(User.Role.valueOf(rs.getString("Role")));
+                 user.setId(UUID.fromString(rs.getString("id")));
+                 user.setName(rs.getString("name"));
+                 user.setEmail(rs.getString("email"));
+                 user.setPassword(rs.getString("password"));
+                 user.setRole(User.Role.valueOf(rs.getString("role")));
 
                  return user;
              }
@@ -62,6 +64,7 @@ public class UserRepositoryImplement implements UserRepository {
          return null;
     }
 
+    @Override
     public void editUser(User user,String email){
 
         String sql = "UPDATE users SET name = ?, email = ?, password = ?, role = ? WHERE email = ?";
@@ -74,13 +77,13 @@ public class UserRepositoryImplement implements UserRepository {
             pstmt.setString(4, user.getRole().name().toUpperCase());
             pstmt.setString(5, email);
             pstmt.executeUpdate();
-            System.out.println("User updated successfully !");
 
         }catch(Exception e){
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
+    @Override
     public void deleteUser(User user){
         String sql = "DELETE FROM users WHERE id = ?";
         try(Connection conn = DatabaseConfig.getConnection()){
@@ -93,10 +96,11 @@ public class UserRepositoryImplement implements UserRepository {
                 System.out.println("Not found User !");
             }
         }catch(Exception e ){
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
+    @Override
     public List<User> findAll() {
         String sql = "SELECT * FROM users";
         List<User> users = new ArrayList<>();

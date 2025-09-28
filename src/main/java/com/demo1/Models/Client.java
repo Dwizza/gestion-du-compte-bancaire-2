@@ -63,4 +63,16 @@ public class Client{
     public void setCurrency(Currency currency) {
         this.currency = currency;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", salary=" + salary +
+                ", currency=" + currency +
+                '}';
+    }
 }

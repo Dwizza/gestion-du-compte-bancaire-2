@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserRepository {
     void saveUser(User user);
-    User FindByEmail(String email);
+    User findByEmail(String email);
     void editUser(User user, String email);
     void deleteUser(User user);
     List<User> findAll();

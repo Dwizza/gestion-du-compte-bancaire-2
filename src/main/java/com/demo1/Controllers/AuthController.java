@@ -4,66 +4,74 @@ import com.demo1.Menus;
 import com.demo1.Models.User;
 import com.demo1.Services.AuthService;
 import com.demo1.Services.impliment.AuthServiceImplement;
+import com.demo1.Exceptions.BusinessRuleViolationException;
 
-import java.awt.*;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class AuthController {
 
-    private static Scanner scanner = new Scanner(System.in);
-    private static AuthService authService = new AuthServiceImplement();
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final AuthService authService = new AuthServiceImplement();
 
-     public static void Login(){
-         System.out.println("========Login========");
-         System.out.print("email : ");
-         String loginEmail = scanner.nextLine();
-         System.out.print("password : ");
-         String password = scanner.nextLine();
-
-         User loggedIn = authService.Login(loginEmail, password);
-
-         if (loggedIn != null) {
-             boolean running = true;
-
-             while (running) {
-                 System.out.println("\n=== MENU " + loggedIn.getRole() + " ===");
-
-                 switch (loggedIn.getRole()) {
-                     case ADMIN:
-                         Menus.showAdminMenu();
-                         System.out.print("choice: ");
-                         int choice1 = scanner.nextInt();
-                         Menus.choiceMenuAdmin(choice1);
-                         break;
-                     case TELLER:
-                         Menus.showTellerMenu();
-                         System.out.println("choice: ");
-                         int choice2 = scanner.nextInt();
-                         Menus.choiceMenuTeller(choice2);
-                         break;
-
-                     case MANAGER:
-                         Menus.showManagerMenu();
-                         System.out.println("choice: ");
-                         int choice3 = scanner.nextInt();
-                         Menus.choiceMenuManager(choice3);
-                         break;
-
-                     case AUDITOR:
-                         Menus.showAuditorMenu();
-                         System.out.println("choice: ");
-                         int choice4 = scanner.nextInt();
-                         Menus.choiceMenuAuditor(choice4);
-                         break;
-                 }
-             }
-         } else {
-             System.out.println("Login failed !");
-             Login();
-         }
-
-         scanner.close();
-     }
+    public static void Login(){
+        while (true) {
+            System.out.println("======== Login ========");
+            System.out.print("email : ");
+            String loginEmail = scanner.nextLine().trim();
+            System.out.print("password : ");
+            String password = scanner.nextLine();
+            try {
+                User loggedIn = authService.Login(loginEmail, password);
+                if (loggedIn != null) {
+                    boolean running = true;
+                    while (running) {
+                        System.out.println("\n=== MENU " + loggedIn.getRole() + " ===");
+                        switch (loggedIn.getRole()) {
+                            case ADMIN:
+                                Menus.showAdminMenu();
+                                System.out.print("choice: ");
+                                int choice1 = readInt();
+                                Menus.choiceMenuAdmin(choice1);
+                                break;
+                            case TELLER:
+                                Menus.showTellerMenu();
+                                System.out.print("choice: ");
+                                int choice2 = readInt();
+                                Menus.choiceMenuTeller(choice2);
+                                break;
+                            case MANAGER:
+                                Menus.showManagerMenu();
+                                System.out.print("choice: ");
+                                int choice3 = readInt();
+                                Menus.choiceMenuManager(choice3);
+                                break;
+                            case AUDITOR:
+                                Menus.showAuditorMenu();
+                                System.out.print("choice: ");
+                                int choice4 = readInt();
+                                Menus.choiceMenuAuditor(choice4);
+                                break;
+                        }
+                    }
+                    return; // exit login loop after session ends
+                } else {
+                    System.out.println("Invalid credentials. Please try again.\n");
+                }
+            } catch (BusinessRuleViolationException ex) {
+                System.out.println(ex.getMessage());
+                System.out.println();
+            }
+        }
     }
 
+    private static int readInt() {
+        while (true) {
+            String line = scanner.nextLine();
+            try {
+                return Integer.parseInt(line.trim());
+            } catch (NumberFormatException ex) {
+                System.out.print("Nombre invalide, réessayez: ");
+            }
+        }
+    }
+}
