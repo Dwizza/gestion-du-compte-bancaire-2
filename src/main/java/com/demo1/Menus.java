@@ -1,5 +1,7 @@
 package com.demo1;
 
+import com.demo1.Controllers.AuthController;
+import com.demo1.Controllers.ClientController;
 import com.demo1.Controllers.UserController;
 import com.demo1.Models.User;
 
@@ -9,12 +11,34 @@ public class Menus {
 
     private static  Scanner sc = new Scanner(System.in);
 
+    public static void showLoginMenu() {
+        System.out.println("=====Menu Principale======");
+        System.out.println("1. Login");
+        System.out.println("2. Exit");
+        System.out.print("Your choice: ");
+
+        String choice = sc.nextLine();
+
+        switch (choice) {
+            case "1":
+                AuthController.Login();
+                break;
+            case "2":
+                System.out.println("Good bye!");
+                System.exit(0);
+                break;
+            default:
+                showLoginMenu();
+                break;
+        }
+    }
+
     public static void showAdminMenu(){
         System.out.println("1. Create User");
         System.out.println("2. Edit User");
         System.out.println("3. Delete User");
-        System.out.println("4. System Configuration");
-        System.out.println("5. Force Account Closure");
+        System.out.println("4. Create Client");
+        System.out.println("5. Show All Users");
         System.out.println("6. View All Operations");
         System.out.println("0. Exit");
     }
@@ -60,6 +84,15 @@ public class Menus {
             case 3:
                 UserController.deleteUser();
                 break;
+            case 4:
+                ClientController.saveClient();
+                break;
+            case 5:
+                UserController.findUser();
+                break;
+            case 0:
+                System.out.println("Exit!");
+                System.exit(0);
             default:
                 showAdminMenu();
                 break;

@@ -5,6 +5,8 @@ import com.demo1.Models.User;
 import com.demo1.Services.UserService;
 import com.demo1.Services.impliment.UserServiceImplement;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserController {
@@ -73,6 +75,11 @@ public class UserController {
         }else{
             System.out.println("User is not existed");
         }
+    }
 
+    public static void findUser(){
+        List<User> users = new ArrayList<>();
+        users = userService.findUser();
+        users.stream().forEach(System.out::println);
     }
 }

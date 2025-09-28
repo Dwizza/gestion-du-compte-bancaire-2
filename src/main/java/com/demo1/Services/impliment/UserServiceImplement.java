@@ -5,6 +5,8 @@ import com.demo1.Repository.UserRepository;
 import com.demo1.Repository.implement.UserRepositoryImplement;
 import com.demo1.Services.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserServiceImplement implements UserService {
@@ -48,6 +50,13 @@ public class UserServiceImplement implements UserService {
 
     public void deleteUser(User user){
         userRepository.deleteUser(user);
+    }
+
+    public List<User> findUser(){
+        List<User> users = new ArrayList<>();
+        users = userRepository.findAll();
+
+        return users;
     }
 
 }

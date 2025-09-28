@@ -9,10 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class UserRepositoryImplement implements UserRepository {
 
@@ -97,4 +96,27 @@ public class UserRepositoryImplement implements UserRepository {
             throw new RuntimeException();
         }
     }
+
+    public List<User> findAll() {
+        String sql = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+        try (Connection conn = DatabaseConfig.getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(UUID.fromString(rs.getString("id")));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(User.Role.valueOf(rs.getString("role")));
+                users.add(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return users;
+    }
+
 }
