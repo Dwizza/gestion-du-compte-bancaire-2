@@ -8,6 +8,7 @@ public interface ClientRepository {
 
     void saveClient(Client client);
     Client findByEmail(String email);
+    Client findByCin(String cin);
     void updateClient(Client client, String recentEmail);
     void deleteClient(Client client);
     List<Client> findAll();

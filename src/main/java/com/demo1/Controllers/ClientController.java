@@ -17,6 +17,7 @@ public class ClientController {
     private static final ClientService clientService = new ClientServiceImplement();
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    private static final Pattern CIN_PATTERN = Pattern.compile("^[A-Za-z0-9]{4,20}$");
 
     public static void saveClient(){
         System.out.println("=========== Create Client ==========\n");
@@ -25,8 +26,9 @@ public class ClientController {
             String address = promptNonEmpty("Address: ");
             String email = promptEmail("Email: ");
             BigDecimal salary = promptPositiveAmount("Salary: ");
+            String cin = promptCin("CIN: ");
 
-            Client client = clientService.save(fullName, address, email, salary.setScale(2, RoundingMode.HALF_UP).doubleValue(), Client.Currency.MAD);
+            Client client = clientService.save(fullName, address, email, salary.setScale(2, RoundingMode.HALF_UP).doubleValue(), Client.Currency.MAD, cin);
             System.out.println("Client created successfully with Email: " + client.getEmail());
         } catch (BusinessRuleViolationException ex) {
             System.out.println(ex.getMessage());
@@ -45,7 +47,8 @@ public class ClientController {
         String address = promptNonEmpty("New Address: ");
         String email = promptEmail("New Email: ");
         BigDecimal salary = promptPositiveAmount("New Salary: ");
-        clientService.editClient(fullName, address, email, salary.setScale(2, RoundingMode.HALF_UP).doubleValue(), existing.getCurrency(), recentEmail);
+        String cin = promptCin("New CIN: ");
+        clientService.editClient(fullName, address, email, salary.setScale(2, RoundingMode.HALF_UP).doubleValue(), existing.getCurrency(), cin, recentEmail);
         System.out.println("Client updated successfully!");
     }
 
@@ -105,6 +108,16 @@ public class ClientController {
                 return e;
             }
             System.out.println("Invalid email format. Please try again.");
+        }
+    }
+
+    private static String promptCin(String label) {
+        while (true) {
+            String c = promptNonEmpty(label);
+            if (CIN_PATTERN.matcher(c).matches()) {
+                return c.toUpperCase();
+            }
+            System.out.println("Invalid CIN. Use 4-20 alphanumeric characters.");
         }
     }
 

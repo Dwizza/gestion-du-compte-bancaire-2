@@ -6,11 +6,12 @@ import java.util.List;
 
 public interface ClientService {
 
-    Client save(String fullName, String address, String email, Double salary, Client.Currency currency);
+    Client save(String fullName, String address, String email, Double salary, Client.Currency currency, String cin);
 
     Client findByEmail(String email);
+    Client findByCin(String cin);
 
-    void editClient(String fullName, String address, String email, Double salary, Client.Currency currency, String recentEmail);
+    void editClient(String fullName, String address, String email, Double salary, Client.Currency currency, String cin, String recentEmail);
 
     void deleteClient(Client client);
 

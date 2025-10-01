@@ -14,7 +14,7 @@ import java.util.UUID;
 public class ClientRepositoryImplement implements ClientRepository {
 
     public void saveClient(Client client){
-        String sql = "INSERT INTO clients (id, full_name, address, email, salary, currency) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO clients (id, full_name, address, email, salary, currency, cin) VALUES (?,?,?,?,?,?,?)";
         try(Connection conn = DatabaseConfig.getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setObject(1, client.getId());
@@ -23,6 +23,7 @@ public class ClientRepositoryImplement implements ClientRepository {
             pstmt.setString(4, client.getEmail());
             pstmt.setBigDecimal(5, client.getSalary());
             pstmt.setString(6, client.getCurrency().name());
+            pstmt.setString(7, client.getCin());
             pstmt.executeUpdate();
 
         }catch(Exception e ){
@@ -32,20 +33,21 @@ public class ClientRepositoryImplement implements ClientRepository {
 
     @Override
     public Client findByEmail(String email) {
-        String sql = "SELECT id, full_name, address, email, salary, currency FROM clients WHERE email = ?";
+        String sql = "SELECT * FROM clients WHERE email = ?";
         try (Connection conn = DatabaseConfig.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Client c = new Client();
-                c.setId(UUID.fromString(rs.getString("id")));
-                c.setFullName(rs.getString("full_name"));
-                c.setAddress(rs.getString("address"));
-                c.setEmail(rs.getString("email"));
-                c.setSalary(rs.getBigDecimal("salary"));
-                c.setCurrency(Client.Currency.valueOf(rs.getString("currency")));
-                return c;
+                Client client = new Client();
+                client.setId(UUID.fromString(rs.getString("id")));
+                client.setFullName(rs.getString("full_name"));
+                client.setAddress(rs.getString("address"));
+                client.setEmail(rs.getString("email"));
+                client.setSalary(rs.getBigDecimal("salary"));
+                client.setCurrency(Client.Currency.valueOf(rs.getString("currency")));
+                client.setCin(rs.getString("cin"));
+                return client;
             }
             return null;
         } catch (Exception e) {
@@ -54,8 +56,32 @@ public class ClientRepositoryImplement implements ClientRepository {
     }
 
     @Override
+    public Client findByCin(String cin) {
+        String sql = "SELECT * FROM clients WHERE cin = ?";
+        try (Connection conn = DatabaseConfig.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, cin);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Client client = new Client();
+                client.setId(UUID.fromString(rs.getString("id")));
+                client.setFullName(rs.getString("full_name"));
+                client.setAddress(rs.getString("address"));
+                client.setEmail(rs.getString("email"));
+                client.setSalary(rs.getBigDecimal("salary"));
+                client.setCurrency(Client.Currency.valueOf(rs.getString("currency")));
+                client.setCin(rs.getString("cin"));
+                return client;
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding client by CIN", e);
+        }
+    }
+
+    @Override
     public void updateClient(Client client, String recentEmail) {
-        String sql = "UPDATE clients SET full_name = ?, address = ?, email = ?, salary = ?, currency = ? WHERE email = ?";
+        String sql = "UPDATE clients SET full_name = ?, address = ?, email = ?, salary = ?, currency = ?, cin = ? WHERE email = ?";
         try (Connection conn = DatabaseConfig.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, client.getFullName());
@@ -63,7 +89,8 @@ public class ClientRepositoryImplement implements ClientRepository {
             ps.setString(3, client.getEmail());
             ps.setBigDecimal(4, client.getSalary());
             ps.setString(5, client.getCurrency().name());
-            ps.setString(6, recentEmail);
+            ps.setString(6, client.getCin());
+            ps.setString(7, recentEmail);
             ps.executeUpdate();
             System.out.println("Client updated successfully !");
         } catch (Exception e) {
@@ -90,7 +117,7 @@ public class ClientRepositoryImplement implements ClientRepository {
 
     @Override
     public List<Client> findAll() {
-        String sql = "SELECT id, full_name, address, email, salary, currency FROM clients";
+        String sql = "SELECT id, full_name, address, email, salary, currency, cin FROM clients";
         List<Client> list = new ArrayList<>();
         try (Connection conn = DatabaseConfig.getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -103,6 +130,7 @@ public class ClientRepositoryImplement implements ClientRepository {
                 c.setEmail(rs.getString("email"));
                 c.setSalary(rs.getBigDecimal("salary"));
                 c.setCurrency(Client.Currency.valueOf(rs.getString("currency")));
+                c.setCin(rs.getString("cin"));
                 list.add(c);
             }
         } catch (Exception e) {

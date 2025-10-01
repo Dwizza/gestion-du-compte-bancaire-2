@@ -1,5 +1,7 @@
 package com.demo1;
 
+import com.demo1.Controllers.AccountController;
+import com.demo1.Controllers.TransactionController;
 import com.demo1.Controllers.UserController;
 import com.demo1.Controllers.ClientController;
 import com.demo1.Views.View;
@@ -59,7 +61,16 @@ public class Menus {
                 }
                 break;
             case 3:
-                // System configuration (to implement)
+                View.showTransactionsMenu();
+                System.out.print("choice: ");
+                int sub3 = readInt();
+                switch (sub3) {
+                    case 1 -> TransactionController.Deposit();
+                    case 2 -> TransactionController.Withdraw();
+                    case 9 -> { /* back */ }
+                    case 0 -> { System.out.println("Exit"); System.exit(0);}
+                    default -> View.showTransactionsMenu();
+                }
                 break;
             case 4:
                 // Force account closure (to implement with MANAGER validation)
@@ -98,15 +109,27 @@ public class Menus {
                 }
                 break;
             case 2:
-                // Deposit
+                AccountController.saveAccount();
                 break;
             case 3:
-                // Withdraw
+                View.showTransactionsMenu();
+                System.out.print("choice: ");
+                int sub1 = readInt();
+                switch (sub1) {
+                    case 1 -> TransactionController.Deposit();
+                    case 2 -> TransactionController.Withdraw();
+                    case 9 -> { /* back */ }
+                    case 0 -> { System.out.println("Exit"); System.exit(0);}
+                    default -> View.showTransactionsMenu();
+                }
                 break;
             case 4:
-                // Internal transfer
+                // Withdraw (shortcut) — use transactions menu
                 break;
             case 5:
+                // Internal transfer
+                break;
+            case 6:
                 // Credit request
                 break;
             case 9:

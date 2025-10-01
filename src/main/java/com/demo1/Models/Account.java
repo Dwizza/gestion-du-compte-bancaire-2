@@ -10,10 +10,19 @@ public class Account {
     private BigDecimal balance;
     private Currency currency;
     private AccountType type;
-    private Client client;
+    private UUID clientId;
+    private boolean status;
 
     public enum AccountType {
         CURRENT, SAVINGS, CREDIT
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public enum Currency {
@@ -60,12 +69,12 @@ public class Account {
         this.type = type;
     }
 
-    public Client getClient() {
-        return client;
+    public UUID getClientId() {
+        return clientId;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClient(UUID clientId) {
+        this.clientId = clientId;
     }
 }
 

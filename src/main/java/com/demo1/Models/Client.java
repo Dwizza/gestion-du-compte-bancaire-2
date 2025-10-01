@@ -11,6 +11,8 @@ public class Client{
     private String email;
     private BigDecimal salary;
     private Currency currency;
+    // Ajout CIN unique (contrainte DB gérée côté repository)
+    private String cin;
 
     public enum Currency {
         MAD, USD, EUR
@@ -64,10 +66,19 @@ public class Client{
         this.currency = currency;
     }
 
+    public String getCin() {
+        return cin;
+    }
+
+    public void setCin(String cin) {
+        this.cin = cin;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
+                ", cin='" + cin + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +

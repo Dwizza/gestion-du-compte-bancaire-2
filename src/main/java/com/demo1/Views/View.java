@@ -11,17 +11,17 @@ public class View {
         System.out.println("0. Exit");
     }
 
-    public static void showMainMenu(String userName, String role) {
-        System.out.println("\nLogged in as [" + userName + "] - Role: " + role);
-        System.out.println("1. Accounts");
-        System.out.println("2. Transactions");
-        System.out.println("3. Fees & Commissions");
-        System.out.println("4. Credits");
-        System.out.println("5. Reports & Statistics");
-        System.out.println("6. Profile");
-        System.out.println("7. Logout");
-        System.out.println("0. Exit");
-    }
+//    public static void showMainMenu(String userName, String role) {
+//        System.out.println("\nLogged in as [" + userName + "] - Role: " + role);
+//        System.out.println("1. Accounts");
+//        System.out.println("2. Transactions");
+//        System.out.println("3. Fees & Commissions");
+//        System.out.println("4. Credits");
+//        System.out.println("5. Reports & Statistics");
+//        System.out.println("6. Profile");
+//        System.out.println("7. Logout");
+//        System.out.println("0. Exit");
+//    }
 
     public static void showBackMenu() {
         System.out.println("9. Back");
@@ -37,7 +37,7 @@ public class View {
     public static void showAdminMenu() {
         System.out.println("1. User Management");
         System.out.println("2. Client Management");
-        System.out.println("3. System Configuration");
+        System.out.println("3. Transaction Management");
         System.out.println("4. Force Account Closure");
         System.out.println("5. View All Operations");
         showBackMenu();
@@ -45,10 +45,9 @@ public class View {
 
     public static void showTellerMenu() {
         System.out.println("1. Client Management");
-        System.out.println("2. Deposit");
-        System.out.println("3. Withdraw");
-        System.out.println("4. Internal Transfer");
-        System.out.println("5. Credit Request");
+        System.out.println("2. Create Account");
+        System.out.println("3. Transaction Management");
+        System.out.println("6. Credit Request");
         showBackMenu();
     }
 
