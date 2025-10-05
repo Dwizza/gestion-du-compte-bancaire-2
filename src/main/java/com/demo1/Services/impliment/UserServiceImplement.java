@@ -3,7 +3,6 @@ package com.demo1.Services.impliment;
 import com.demo1.Exceptions.BusinessRuleViolationException;
 import com.demo1.Models.User;
 import com.demo1.Repository.UserRepository;
-import com.demo1.Repository.implement.UserRepositoryImplement;
 import com.demo1.Services.UserService;
 
 import java.util.List;
@@ -12,8 +11,12 @@ import java.util.regex.Pattern;
 
 public class UserServiceImplement implements UserService {
 
-    private static final UserRepository userRepository = new UserRepositoryImplement();
+    private final UserRepository userRepository;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+    public UserServiceImplement(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void createUser(String name, String email, String password, User.Role role){

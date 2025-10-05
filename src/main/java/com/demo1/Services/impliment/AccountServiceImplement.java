@@ -3,7 +3,6 @@ package com.demo1.Services.impliment;
 import com.demo1.Models.Account;
 import com.demo1.Models.Client;
 import com.demo1.Repository.AccountRepository;
-import com.demo1.Repository.implement.AccountRepositoryImplement;
 import com.demo1.Services.AccountService;
 
 import java.math.BigDecimal;
@@ -12,7 +11,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class AccountServiceImplement implements AccountService {
-    private static AccountRepository accountRepository = new AccountRepositoryImplement();
+    private final AccountRepository accountRepository;
+
+    public AccountServiceImplement(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
 
     public void saveAccount(Client client, BigDecimal balance, Account.AccountType type){
 

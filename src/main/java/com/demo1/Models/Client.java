@@ -11,7 +11,6 @@ public class Client{
     private String email;
     private BigDecimal salary;
     private Currency currency;
-    // Ajout CIN unique (contrainte DB gérée côté repository)
     private String cin;
 
     public enum Currency {

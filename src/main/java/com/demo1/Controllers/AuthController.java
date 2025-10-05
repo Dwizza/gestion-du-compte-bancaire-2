@@ -3,7 +3,6 @@ package com.demo1.Controllers;
 import com.demo1.Menus;
 import com.demo1.Models.User;
 import com.demo1.Services.AuthService;
-import com.demo1.Services.impliment.AuthServiceImplement;
 import com.demo1.Exceptions.BusinessRuleViolationException;
 
 import java.util.Scanner;
@@ -11,49 +10,53 @@ import java.util.Scanner;
 public class AuthController {
 
     private static final Scanner scanner = new Scanner(System.in);
-    private static final AuthService authService = new AuthServiceImplement();
+    private final AuthService authService;
+    private final Menus menus;
 
-    public static void Login(){
+    public AuthController(AuthService authService, Menus menus) {
+        this.authService = authService;
+        this.menus = menus;
+    }
+
+    public void Login(){
         while (true) {
             System.out.println("======== Login ========");
             System.out.print("email : ");
-            String loginEmail = scanner.nextLine().trim();
+            String loginEmail = scanner.nextLine().trim().toLowerCase();
             System.out.print("password : ");
             String password = scanner.nextLine();
             try {
                 User loggedIn = authService.Login(loginEmail, password);
                 if (loggedIn != null) {
-                    boolean running = true;
-                    while (running) {
+                    while (true) {
                         System.out.println("\n=== MENU " + loggedIn.getRole() + " ===");
                         switch (loggedIn.getRole()) {
                             case ADMIN:
                                 Menus.showAdminMenu();
                                 System.out.print("choice: ");
                                 int choice1 = readInt();
-                                Menus.choiceMenuAdmin(choice1);
+                                menus.choiceMenuAdmin(choice1);
                                 break;
                             case TELLER:
                                 Menus.showTellerMenu();
                                 System.out.print("choice: ");
                                 int choice2 = readInt();
-                                Menus.choiceMenuTeller(choice2);
+                                menus.choiceMenuTeller(choice2);
                                 break;
                             case MANAGER:
                                 Menus.showManagerMenu();
                                 System.out.print("choice: ");
                                 int choice3 = readInt();
-                                Menus.choiceMenuManager(choice3);
+                                menus.choiceMenuManager(choice3);
                                 break;
                             case AUDITOR:
                                 Menus.showAuditorMenu();
                                 System.out.print("choice: ");
                                 int choice4 = readInt();
-                                Menus.choiceMenuAuditor(choice4);
+                                menus.choiceMenuAuditor(choice4);
                                 break;
                         }
                     }
-                    return; // exit login loop after session ends
                 } else {
                     System.out.println("Invalid credentials. Please try again.\n");
                 }

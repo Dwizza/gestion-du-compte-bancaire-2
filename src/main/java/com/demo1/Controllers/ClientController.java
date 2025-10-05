@@ -2,137 +2,96 @@ package com.demo1.Controllers;
 
 import com.demo1.Models.Client;
 import com.demo1.Services.ClientService;
-import com.demo1.Services.impliment.ClientServiceImplement;
-import com.demo1.Exceptions.BusinessRuleViolationException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 public class ClientController {
-
     private static final Scanner scanner = new Scanner(System.in);
-    private static final ClientService clientService = new ClientServiceImplement();
+    private final ClientService clientService;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-    private static final Pattern CIN_PATTERN = Pattern.compile("^[A-Za-z0-9]{4,20}$");
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
-    public static void saveClient(){
-        System.out.println("=========== Create Client ==========\n");
+    public void saveClient(){
+        System.out.println("=========== Create Client ==========");
+        System.out.print("Full Name: ");
+        String fullName = scanner.nextLine().trim();
+        System.out.print("Address: ");
+        String address = scanner.nextLine().trim();
+        System.out.print("Email: ");
+        String email = scanner.nextLine().trim();
+        System.out.print("Salary: ");
+        String salaryInput = scanner.nextLine().trim();
+        System.out.print("CIN: ");
+        String cin = scanner.nextLine().trim().toUpperCase();
         try {
-            String fullName = promptNonEmpty("Full Name: ");
-            String address = promptNonEmpty("Address: ");
-            String email = promptEmail("Email: ");
-            BigDecimal salary = promptPositiveAmount("Salary: ");
-            String cin = promptCin("CIN: ");
-
-            Client client = clientService.save(fullName, address, email, salary.setScale(2, RoundingMode.HALF_UP).doubleValue(), Client.Currency.MAD, cin);
+            BigDecimal salary = new BigDecimal(salaryInput).setScale(2, RoundingMode.HALF_UP);
+            Client client = clientService.save(fullName, address, email, salary.doubleValue(), Client.Currency.MAD, cin);
             System.out.println("Client created successfully with Email: " + client.getEmail());
-        } catch (BusinessRuleViolationException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    public static void editClient(){
-        System.out.println("=========== Edit Client ==========\n");
-        String recentEmail = promptNonEmpty("Current Email: ");
+    public void editClient(){
+        System.out.println("=========== Edit Client ==========");
+        System.out.print("Current Email: ");
+        String recentEmail = scanner.nextLine().trim();
         Client existing = clientService.findByEmail(recentEmail);
         if (existing == null) {
             System.out.println("Client not found.");
             return;
         }
-        String fullName = promptNonEmpty("New Full Name: ");
-        String address = promptNonEmpty("New Address: ");
-        String email = promptEmail("New Email: ");
-        BigDecimal salary = promptPositiveAmount("New Salary: ");
-        String cin = promptCin("New CIN: ");
-        clientService.editClient(fullName, address, email, salary.setScale(2, RoundingMode.HALF_UP).doubleValue(), existing.getCurrency(), cin, recentEmail);
-        System.out.println("Client updated successfully!");
+        System.out.print("New Full Name: ");
+        String fullName = scanner.nextLine().trim();
+        System.out.print("New Address: ");
+        String address = scanner.nextLine().trim();
+        System.out.print("New Email: ");
+        String email = scanner.nextLine().trim();
+        System.out.print("New Salary: ");
+        String salaryInput = scanner.nextLine().trim();
+        System.out.print("New CIN: ");
+        String cin = scanner.nextLine().trim().toUpperCase();
+        try {
+            BigDecimal salary = new BigDecimal(salaryInput).setScale(2, RoundingMode.HALF_UP);
+            clientService.editClient(fullName, address, email, salary.doubleValue(), existing.getCurrency(), cin, recentEmail);
+            System.out.println("Client updated successfully!");
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
-    public static void deleteClient(){
-        System.out.println("=========== Delete Client ==========\n");
-        String email = promptEmail("Email of client to delete: ");
+    public void deleteClient(){
+        System.out.println("=========== Delete Client ==========");
+        System.out.print("Email of client to delete: ");
+        String email = scanner.nextLine().trim();
         Client existing = clientService.findByEmail(email);
         if (existing == null) {
             System.out.println("Client not found.");
             return;
         }
-        if (confirm("Are you sure you want to delete this client?")) {
+        System.out.print("Are you sure you want to delete this client? (y/n): ");
+        String confirm = scanner.nextLine().trim();
+        if ("y".equalsIgnoreCase(confirm)) {
             clientService.deleteClient(existing);
+            System.out.println("Client deleted successfully.");
         } else {
             System.out.println("Deletion cancelled.");
         }
     }
 
-    public static void listClients(){
-        System.out.println("=========== Clients ==========\n");
+    public void listClients(){
+        System.out.println("=========== Clients ==========");
         List<Client> clients = clientService.findAll();
         if (clients.isEmpty()) {
             System.out.println("No clients found.");
         } else {
-            clients.forEach(System.out::println);
-        }
-    }
-
-    private static boolean confirm(String message) {
-        while (true) {
-            System.out.print(message + " (y/n): ");
-            String in = scanner.nextLine();
-            if ("y".equalsIgnoreCase(in)) return true;
-            if ("n".equalsIgnoreCase(in)) return false;
-            System.out.println("Please answer with 'y' or 'n'.");
-        }
-    }
-
-    private static String promptNonEmpty(String label) {
-        while (true) {
-            System.out.print(label);
-            String v = scanner.nextLine();
-            if (v != null) {
-                v = v.trim();
-            }
-            if (v != null && !v.isEmpty()) {
-                return v;
-            }
-            System.out.println("Value is required. Please try again.");
-        }
-    }
-
-    private static String promptEmail(String label) {
-        while (true) {
-            String e = promptNonEmpty(label);
-            if (EMAIL_PATTERN.matcher(e).matches()) {
-                return e;
-            }
-            System.out.println("Invalid email format. Please try again.");
-        }
-    }
-
-    private static String promptCin(String label) {
-        while (true) {
-            String c = promptNonEmpty(label);
-            if (CIN_PATTERN.matcher(c).matches()) {
-                return c.toUpperCase();
-            }
-            System.out.println("Invalid CIN. Use 4-20 alphanumeric characters.");
-        }
-    }
-
-    private static BigDecimal promptPositiveAmount(String label) {
-        while (true) {
-            System.out.print(label);
-            String input = scanner.nextLine();
-            try {
-                BigDecimal amount = new BigDecimal(input).setScale(2, RoundingMode.HALF_UP);
-                if (amount.compareTo(BigDecimal.ZERO) > 0) {
-                    return amount;
-                }
-                System.out.println("Amount must be strictly positive.");
-            } catch (NumberFormatException ex) {
-                System.out.println("Invalid number. Please enter a numeric value (e.g., 1234.56).");
+            for (Client c : clients) {
+                System.out.println("Name: " + c.getFullName() + ", Email: " + c.getEmail() + ", CIN: " + c.getCin() + ", Salary: " + c.getSalary());
             }
         }
     }

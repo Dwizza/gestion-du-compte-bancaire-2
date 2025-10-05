@@ -1,9 +1,6 @@
 package com.demo1;
 
-import com.demo1.Controllers.AccountController;
-import com.demo1.Controllers.TransactionController;
-import com.demo1.Controllers.UserController;
-import com.demo1.Controllers.ClientController;
+import com.demo1.Controllers.*;
 import com.demo1.Views.View;
 
 import java.util.Scanner;
@@ -12,173 +9,122 @@ public class Menus {
 
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    public static void showAdminMenu() {
-        View.showAdminMenu();
+    private final UserController userController;
+    private final ClientController clientController;
+    private final AccountController accountController;
+    private final TransactionController transactionController;
+
+    public Menus(UserController userController,
+                 ClientController clientController,
+                 AccountController accountController,
+                 TransactionController transactionController) {
+        this.userController = userController;
+        this.clientController = clientController;
+        this.accountController = accountController;
+        this.transactionController = transactionController;
     }
 
-    public static void showTellerMenu() {
-        View.showTellerMenu();
-    }
+    public static void showAdminMenu() { View.showAdminMenu(); }
+    public static void showTellerMenu() { View.showTellerMenu(); }
+    public static void showManagerMenu() { View.showManagerMenu(); }
+    public static void showAuditorMenu() { View.showAuditorMenu(); }
 
-    public static void showManagerMenu() {
-        View.showManagerMenu();
-    }
-
-    public static void showAuditorMenu() {
-        View.showAuditorMenu();
-    }
-
-    public static void choiceMenuAdmin(int ms) {
+    public void choiceMenuAdmin(int ms) {
         switch (ms) {
-            case 1:
-                // User Management sub-menu
+            case 1 -> {
                 View.showUserManagementMenu();
                 System.out.print("choice: ");
                 int sub = readInt();
                 switch (sub) {
-                    case 1 -> UserController.createUser();
-                    case 2 -> UserController.editUser();
-                    case 3 -> UserController.deleteUser();
-                    case 4 -> UserController.listUsers();
-                    case 9 -> { /* back */ }
-                    case 0 -> { System.out.println("Exit"); System.exit(0);}
-                    default -> View.showUserManagementMenu();
+                    case 1 -> userController.createUser();
+                    case 2 -> userController.editUser();
+                    case 3 -> userController.deleteUser();
+                    case 4 -> userController.listUsers();
+                    case 9, 0 -> {}
                 }
-                break;
-            case 2:
-                // Client Management sub-menu (Admin)
+            }
+            case 2 -> {
                 View.showClientManagementMenu();
                 System.out.print("choice: ");
                 int sub2 = readInt();
                 switch (sub2) {
-                    case 1 -> ClientController.saveClient();
-                    case 2 -> ClientController.editClient();
-                    case 3 -> ClientController.deleteClient();
-                    case 4 -> ClientController.listClients();
-                    case 9 -> { /* back */ }
-                    case 0 -> { System.out.println("Exit"); System.exit(0);}
-                    default -> View.showClientManagementMenu();
+                    case 1 -> clientController.saveClient();
+                    case 2 -> clientController.editClient();
+                    case 3 -> clientController.deleteClient();
+                    case 4 -> clientController.listClients();
+                    case 9, 0 -> {}
                 }
-                break;
-            case 3:
+            }
+            case 3 -> {
                 View.showTransactionsMenu();
                 System.out.print("choice: ");
                 int sub3 = readInt();
                 switch (sub3) {
-                    case 1 -> TransactionController.Deposit();
-                    case 2 -> TransactionController.Withdraw();
-                    case 9 -> { /* back */ }
-                    case 0 -> { System.out.println("Exit"); System.exit(0);}
-                    default -> View.showTransactionsMenu();
+                    case 1 -> transactionController.Deposit();
+                    case 2 -> transactionController.Withdraw();
+                    case 3 -> transactionController.TransferInternal();
+                    case 4 -> transactionController.TransferOut();
+                    case 5 -> transactionController.History();
+                    case 9, 0 -> {}
                 }
-                break;
-            case 4:
-                // Force account closure (to implement with MANAGER validation)
-                break;
-            case 5:
-                // View all operations (to implement)
-                break;
-            case 0:
-                System.out.println("Exit");
-                System.exit(0);
-                break;
-            case 9:
-                // Back
-                break;
-            default:
-                showAdminMenu();
-                break;
+            }
+            case 4, 5, 9, 0 -> {}
+            default -> showAdminMenu();
         }
     }
 
-    public static void choiceMenuTeller(int ms) {
+    public void choiceMenuTeller(int ms) {
         switch (ms) {
-            case 1:
-                // Client Management sub-menu
+            case 1 -> {
                 View.showClientManagementMenu();
                 System.out.print("choice: ");
                 int sub = readInt();
                 switch (sub) {
-                    case 1 -> ClientController.saveClient();
-                    case 2 -> ClientController.editClient();
-                    case 3 -> ClientController.deleteClient();
-                    case 4 -> ClientController.listClients();
-                    case 9 -> { /* back */ }
-                    case 0 -> { System.out.println("Exit"); System.exit(0);}
-                    default -> View.showClientManagementMenu();
+                    case 1 -> clientController.saveClient();
+                    case 2 -> clientController.editClient();
+                    case 3 -> clientController.deleteClient();
+                    case 4 -> clientController.listClients();
+                    case 9, 0 -> {}
                 }
-                break;
-            case 2:
-                AccountController.saveAccount();
-                break;
-            case 3:
-                View.showTransactionsMenu();
+            }
+            case 2 -> accountController.saveAccount();
+            case 3 -> {
+                View.showTransactionsMenuTeller();
                 System.out.print("choice: ");
                 int sub1 = readInt();
                 switch (sub1) {
-                    case 1 -> TransactionController.Deposit();
-                    case 2 -> TransactionController.Withdraw();
-                    case 9 -> { /* back */ }
-                    case 0 -> { System.out.println("Exit"); System.exit(0);}
-                    default -> View.showTransactionsMenu();
+                    case 1 -> transactionController.Deposit();
+                    case 2 -> transactionController.Withdraw();
+                    case 3 -> transactionController.TransferInternal();
+                    case 4 -> transactionController.TransferOut();
+                    case 9, 0 -> {}
                 }
-                break;
-            case 4:
-                // Withdraw (shortcut) — use transactions menu
-                break;
-            case 5:
-                // Internal transfer
-                break;
-            case 6:
-                // Credit request
-                break;
-            case 9:
-                // Back
-                break;
-            case 0:
-                System.out.println("Exit");
-                System.exit(0);
-                break;
-            default:
-                showTellerMenu();
-                break;
+            }
+            case 4, 5, 6, 9, 0 -> {}
+            default -> showTellerMenu();
         }
     }
 
-    public static void choiceMenuManager(int ms) {
+    public void choiceMenuManager(int ms) {
         switch (ms) {
-            case 1 -> { /* View clients */ }
-            case 2 -> { /* View accounts */ }
-            case 3 -> { /* Approve account closure */ }
-            case 4 -> { /* Approve credits */ }
-            case 5 -> { /* Approve external transfers */ }
-            case 6 -> { /* Monitor transactions */ }
-            case 9 -> { /* Back */ }
-            case 0 -> { System.out.println("Exit"); System.exit(0);}
+            case 1,2,3,4,5,6,9,0 -> {}
             default -> showManagerMenu();
         }
     }
 
-    public static void choiceMenuAuditor(int ms) {
+    public void choiceMenuAuditor(int ms) {
         switch (ms) {
-            case 1 -> { /* View clients */ }
-            case 2 -> { /* View accounts */ }
-            case 3 -> { /* View transactions */ }
-            case 4 -> { /* View credits */ }
-            case 5 -> { /* Generate audit report */ }
-            case 9 -> { /* Back */ }
-            case 0 -> { System.out.println("Exit"); System.exit(0);}
+            case 1,2 -> {}
+            case 3 -> transactionController.History();
+            case 4,5,9,0 -> {}
             default -> showAuditorMenu();
         }
     }
 
     private static int readInt() {
         while (true) {
-            try {
-                return Integer.parseInt(SCANNER.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.print("Invalid number, try again: ");
-            }
+            try { return Integer.parseInt(SCANNER.nextLine().trim()); }
+            catch (NumberFormatException e) { System.out.print("Invalid number, try again: "); }
         }
     }
 }

@@ -11,7 +11,8 @@ public class Transaction {
     private TransactionType type;
     private TransactionStatus status;
     private LocalDateTime timestamp;
-    private Account account;
+    private Account source_account_id;
+    private Account target_account_id;
 
     public enum TransactionType {
         DEPOSIT, WITHDRAW, TRANSFER_IN, TRANSFER_OUT, TRANSFER_EXTERNAL, FEE
@@ -73,12 +74,20 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
-    public Account getAccount() {
-        return account;
+    public Account getSource_account_id() {
+        return source_account_id;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setSource_account_id(Account source_account_id) {
+        this.source_account_id = source_account_id;
+    }
+
+    public Account getTarget_account_id() {
+        return target_account_id;
+    }
+
+    public void setTarget_account_id(Account target_account_id) {
+        this.target_account_id = target_account_id;
     }
 }
 

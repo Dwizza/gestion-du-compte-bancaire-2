@@ -4,7 +4,6 @@ import com.demo1.Exceptions.BusinessRuleViolationException;
 import com.demo1.Models.Account;
 import com.demo1.Models.Client;
 import com.demo1.Repository.ClientRepository;
-import com.demo1.Repository.implement.ClientRepositoryImplement;
 import com.demo1.Services.AccountService;
 import com.demo1.Services.ClientService;
 
@@ -15,9 +14,14 @@ import java.util.regex.Pattern;
 
 public class ClientServiceImplement implements ClientService {
 
-    private static final ClientRepository clientRepository = new ClientRepositoryImplement();
-    private static final AccountService accountService = new AccountServiceImplement();
+    private final ClientRepository clientRepository;
+    private final AccountService accountService;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+    public ClientServiceImplement(ClientRepository clientRepository, AccountService accountService) {
+        this.clientRepository = clientRepository;
+        this.accountService = accountService;
+    }
 
     public Client save(String fullName, String address, String email, Double salary, Client.Currency currency, String cin){
         validateClientFields(fullName, address, email, salary, currency);
@@ -54,7 +58,6 @@ public class ClientServiceImplement implements ClientService {
         if (!email.equalsIgnoreCase(recentEmail) && clientRepository.findByEmail(email) != null) {
             throw new BusinessRuleViolationException("Client email already in use.");
         }
-        // Vérifier l'unicité du CIN si changé ou conflictuel
         var existingCin = clientRepository.findByCin(cin.trim().toUpperCase());
         if (existingCin != null && !existingCin.getEmail().equalsIgnoreCase(recentEmail)) {
             throw new BusinessRuleViolationException("Client CIN already in use.");
@@ -79,7 +82,6 @@ public class ClientServiceImplement implements ClientService {
         return clientRepository.findAll();
     }
 
-    // Ajout méthode
     @Override
     public Client findByCin(String cin) {
         if (cin == null) return null;
@@ -108,7 +110,6 @@ public class ClientServiceImplement implements ClientService {
         if (cin == null || cin.trim().isEmpty()) {
             throw new BusinessRuleViolationException("CIN is required.");
         }
-        // Optionnel: vérifier un pattern basique alphanumérique 4-12 chars
         if (!cin.trim().matches("^[A-Za-z0-9]{4,20}$")) {
             throw new BusinessRuleViolationException("CIN must be 4-20 alphanumeric characters.");
         }

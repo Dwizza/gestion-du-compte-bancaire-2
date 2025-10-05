@@ -11,18 +11,6 @@ public class View {
         System.out.println("0. Exit");
     }
 
-//    public static void showMainMenu(String userName, String role) {
-//        System.out.println("\nLogged in as [" + userName + "] - Role: " + role);
-//        System.out.println("1. Accounts");
-//        System.out.println("2. Transactions");
-//        System.out.println("3. Fees & Commissions");
-//        System.out.println("4. Credits");
-//        System.out.println("5. Reports & Statistics");
-//        System.out.println("6. Profile");
-//        System.out.println("7. Logout");
-//        System.out.println("0. Exit");
-//    }
-
     public static void showBackMenu() {
         System.out.println("9. Back");
         System.out.println("0. Exit");
@@ -47,7 +35,7 @@ public class View {
         System.out.println("1. Client Management");
         System.out.println("2. Create Account");
         System.out.println("3. Transaction Management");
-        System.out.println("6. Credit Request");
+        System.out.println("4. Credit Request");
         showBackMenu();
     }
 
@@ -99,8 +87,18 @@ public class View {
     public static void showTransactionsMenu() {
         System.out.println("1. Deposit");
         System.out.println("2. Withdraw");
-        System.out.println("3. Transfer");
-        System.out.println("4. Transaction History");
+        System.out.println("3. Internal Transfer");
+        System.out.println("4. Transfer Out");
+        System.out.println("5. Transaction History");
+        System.out.println("6. List Accounts (by CIN)");
+        showBackMenu();
+    }
+
+    public static void showTransactionsMenuTeller() {
+        System.out.println("1. Deposit");
+        System.out.println("2. Withdraw");
+        System.out.println("3. Internal Transfer");
+        System.out.println("4. Transfer Out");
         showBackMenu();
     }
 

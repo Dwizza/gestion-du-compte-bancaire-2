@@ -2,30 +2,32 @@ package com.demo1.Controllers;
 
 import com.demo1.Models.Account;
 import com.demo1.Models.Client;
-import com.demo1.Models.User;
 import com.demo1.Services.AccountService;
 import com.demo1.Services.ClientService;
-import com.demo1.Services.impliment.AccountServiceImplement;
-import com.demo1.Services.impliment.ClientServiceImplement;
-
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class AccountController {
-    private static Scanner scanner = new Scanner(System.in);
-    private static final ClientService clientService = new ClientServiceImplement();
-    private static final AccountService accountService = new AccountServiceImplement();
+    private static final Scanner scanner = new Scanner(System.in);
+    private final ClientService clientService;
+    private final AccountService accountService;
 
-    public static void saveAccount(){
+    public AccountController(ClientService clientService, AccountService accountService) {
+        this.clientService = clientService;
+        this.accountService = accountService;
+    }
+
+    public void saveAccount(){
 
         System.out.println("=== Create account ===");
         System.out.print("Enter client email: ");
         String email = scanner.nextLine();
         System.out.print("Your Balance: ");
-        BigDecimal balance = scanner.nextBigDecimal();
+        BigDecimal balance = new BigDecimal(scanner.nextLine());
         System.out.print("Account Type [ 1-SAVING, 2-CREDIT]: ");
-        int type = scanner.nextInt();
+        int type = Integer.parseInt(scanner.nextLine());
 
         Account.AccountType accountType = switch (type) {
             case 1 -> Account.AccountType.SAVINGS;
@@ -46,7 +48,7 @@ public class AccountController {
         }
     }
 
-    public static Client AccountByClient(){
+    public Client AccountByClient(){
         System.out.println("Enter valid Email: ");
         String email = scanner.nextLine();
 

@@ -2,7 +2,6 @@ package com.demo1.Controllers;
 
 import com.demo1.Models.User;
 import com.demo1.Services.UserService;
-import com.demo1.Services.impliment.UserServiceImplement;
 import com.demo1.Exceptions.BusinessRuleViolationException;
 
 import java.util.List;
@@ -10,9 +9,13 @@ import java.util.Scanner;
 
 public class UserController {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final UserService userService = new UserServiceImplement();
+    private final UserService userService;
 
-    public static void createUser(){
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void createUser(){
         try {
             System.out.print("Name: ");
             String name = scanner.nextLine().trim();
@@ -38,7 +41,7 @@ public class UserController {
         }
     }
 
-    public static void editUser(){
+    public void editUser(){
         System.out.print("email: ");
         String recentEmail = scanner.nextLine().trim();
 
@@ -73,7 +76,7 @@ public class UserController {
         }
     }
 
-    public static void deleteUser(){
+    public void deleteUser(){
         System.out.print("email: ");
         String recentEmail = scanner.nextLine().trim();
         User user = userService.findByEmail(recentEmail);
@@ -84,8 +87,14 @@ public class UserController {
         }
     }
 
-    public static void listUsers(){
+    public void listUsers(){
         List<User> users = userService.findAll();
-        users.forEach(System.out::println);
+        if (users == null || users.isEmpty()) {
+            System.out.println("No users found.");
+            return;
+        }
+        for (User u : users) {
+            System.out.println("Name: " + u.getName() + ", Email: " + u.getEmail() + ", Role: " + u.getRole());
+        }
     }
 }
