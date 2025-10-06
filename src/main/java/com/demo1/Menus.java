@@ -13,16 +13,16 @@ public class Menus {
     private final ClientController clientController;
     private final AccountController accountController;
     private final TransactionController transactionController;
+    private final CreditController creditController;
 
-    public Menus(UserController userController,
-                 ClientController clientController,
-                 AccountController accountController,
-                 TransactionController transactionController) {
+    public Menus(UserController userController, ClientController clientController, AccountController accountController, TransactionController transactionController, CreditController creditController) {
         this.userController = userController;
         this.clientController = clientController;
         this.accountController = accountController;
         this.transactionController = transactionController;
+        this.creditController = creditController;
     }
+
 
     public static void showAdminMenu() { View.showAdminMenu(); }
     public static void showTellerMenu() { View.showTellerMenu(); }
@@ -100,14 +100,16 @@ public class Menus {
                     case 9, 0 -> {}
                 }
             }
-            case 4, 5, 6, 9, 0 -> {}
+            case 4 -> creditController.RequestCredit();
+            case  5, 6, 9, 0 -> {}
             default -> showTellerMenu();
         }
     }
 
     public void choiceMenuManager(int ms) {
         switch (ms) {
-            case 1,2,3,4,5,6,9,0 -> {}
+            case 4 -> creditController.ApproveCredits();
+            case 1,2,3,5,6,9,0 -> {}
             default -> showManagerMenu();
         }
     }

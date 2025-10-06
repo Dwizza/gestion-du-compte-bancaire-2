@@ -72,6 +72,7 @@ public class Credit {
         return endDate;
     }
 
+
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -98,6 +99,21 @@ public class Credit {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Override
+    public String toString() {
+        return "Credit{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", currency=" + currency +
+                ", interestRate=" + interestRate +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", creditType=" + creditType +
+                ", status=" + status +
+                ", account=" + account +
+                '}';
     }
 }
 

@@ -55,6 +55,7 @@ public class TransactionRepositoryImplement implements TransactionRepository {
     public void withdraw(Account account, BigDecimal amount) {
         String updateAccountSql = "UPDATE accounts SET balance = balance - ? WHERE id = ? AND balance >= ?";
         String insertTxSql = "INSERT INTO transactions (id, amount, currency, type, status, \"timestamp\", source_account_id) VALUES (?,?,?,?,?,?,?)";
+
         try (Connection conn = DatabaseConfig.getConnection()) {
             boolean prevAuto = conn.getAutoCommit();
             conn.setAutoCommit(false);
@@ -169,8 +170,8 @@ public class TransactionRepositoryImplement implements TransactionRepository {
                 ins.setObject(1, inId);
                 ins.setBigDecimal(2, amount);
                 ins.setString(3, curr);
-                ins.setString(4, "TRANSFER_IN");
-                ins.setString(5, "SETTLED");
+                ins.setString(4, "TRANSFER_OUT");
+                ins.setString(5, "PENDING");
                 ins.setTimestamp(6, now);
                 ins.setObject(7, from.getId());
                 ins.setObject(8, to.getId());

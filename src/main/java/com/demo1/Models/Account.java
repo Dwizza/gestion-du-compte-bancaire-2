@@ -76,5 +76,18 @@ public class Account {
     public void setClient(UUID clientId) {
         this.clientId = clientId;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", balance=" + balance +
+                ", currency=" + currency +
+                ", type=" + type +
+                ", clientId=" + clientId +
+                ", status=" + status +
+                '}';
+    }
 }
 

@@ -62,7 +62,10 @@ public class TransactionController {
         System.out.println("=========== Withdraw ==========");
         System.out.print("Enter client CIN: ");
         String cin = scanner.nextLine().trim().toUpperCase();
-        if (cin.isEmpty()) { System.out.println("CIN is required."); return; }
+        if (cin.isEmpty()) {
+            System.out.println("CIN is required.");
+            return;
+        }
         Client client = clientService.findByCin(cin);
         if (client == null) { System.out.println("Client not found for CIN: " + cin); return; }
         List<Account> accounts = accountService.findByClient(client);
