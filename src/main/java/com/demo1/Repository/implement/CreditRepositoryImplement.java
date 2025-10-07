@@ -85,6 +85,24 @@ public class CreditRepositoryImplement implements CreditRepository {
     }
 
     @Override
+    public Credit rejectCredit(UUID creditId) {
+        String updateCredit = "UPDATE credits SET status = 'REJECTED' WHERE id = ? AND status = 'PENDING'";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(updateCredit)) {
+            ps.setObject(1, creditId);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 1) {
+                return findById(creditId);
+            } else {
+                // Could be that the credit was not found, or was not in PENDING status
+                return null;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error rejecting credit", e);
+        }
+    }
+
+    @Override
     public List<Credit> findPending() {
         String sql = "SELECT c.id, c.amount, c.currency, c.interest_rate, c.start_date, c.end_date, c.credit_type, c.status, c.account_id, " +
                 "a.account_number, a.type AS account_type, a.currency AS account_currency, a.balance AS account_balance, a.client_id " +

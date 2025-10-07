@@ -70,6 +70,11 @@ public class CreditServiceImplement implements CreditService {
     }
 
     @Override
+    public Credit rejectCredit(UUID creditId){
+        return creditRepository.rejectCredit(creditId);
+    }
+
+    @Override
     public List<Credit> listPending() {
         return creditRepository.findPending();
     }

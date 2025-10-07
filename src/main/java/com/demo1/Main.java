@@ -20,12 +20,13 @@ public class Main {
         ClientRepository clientRepository = new ClientRepositoryImplement();
         TransactionRepository transactionRepository = new TransactionRepositoryImplement();
         CreditRepository creditRepository = new CreditRepositoryImplement();
+        FeeRuleRepository feeRuleRepository = new FeeRuleRepositoryImplement();
 
         // Services
         UserService userService = new UserServiceImplement(userRepository);
         AccountService accountService = new AccountServiceImplement(accountRepository);
         ClientService clientService = new ClientServiceImplement(clientRepository, accountService);
-        TransactionService transactionService = new TransactionServiceImplement(transactionRepository);
+        TransactionService transactionService = new TransactionServiceImplement(transactionRepository, feeRuleRepository);
         AuthService authService = new AuthServiceImplement(userRepository);
         CreditService creditService = new CreditServiceImplement(creditRepository);
 

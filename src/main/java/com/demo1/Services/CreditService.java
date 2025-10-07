@@ -13,5 +13,6 @@ public interface CreditService {
     Credit createCredit(Client client, Account account, BigDecimal amount, Credit.CreditType type, int months);
     BigDecimal getLastMonthlyPayment();
     Credit approveCredit(UUID creditId);
+        Credit rejectCredit(UUID creditId);
     List<Credit> listPending();
 }

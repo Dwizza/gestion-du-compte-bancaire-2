@@ -9,8 +9,9 @@ import java.util.List;
 public interface TransactionService {
 
     void deposit(Account account, BigDecimal amount);
-    void withdraw(Account account, BigDecimal amount);
+    void withdraw(Account account, BigDecimal amount); // fee calculé automatiquement
     void transferInternal(Account from, Account to, BigDecimal amount);
-    void transferOut(Account from, Account to, BigDecimal amount);
+    void transferOut(Account from, Account to, BigDecimal amount); // fee calculé automatiquement
     List<Transaction> findAll();
+    BigDecimal getLastFee();
 }

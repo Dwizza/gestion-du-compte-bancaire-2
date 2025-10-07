@@ -12,5 +12,6 @@ public interface CreditRepository {
     List<Credit> findByClient(UUID clientId);
     List<Credit> findAll();
     Credit approveCredit(UUID creditId); // change status to ACTIVE + update account balance
+    Credit rejectCredit(UUID creditId); // change status to REJECTED
     List<Credit> findPending();
 }

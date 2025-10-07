@@ -52,32 +52,46 @@ public class TransactionRepositoryImplement implements TransactionRepository {
     }
 
     @Override
-    public void withdraw(Account account, BigDecimal amount) {
+    public void withdraw(Account account, BigDecimal amount, BigDecimal fee) {
         String updateAccountSql = "UPDATE accounts SET balance = balance - ? WHERE id = ? AND balance >= ?";
         String insertTxSql = "INSERT INTO transactions (id, amount, currency, type, status, \"timestamp\", source_account_id) VALUES (?,?,?,?,?,?,?)";
-
         try (Connection conn = DatabaseConfig.getConnection()) {
             boolean prevAuto = conn.getAutoCommit();
             conn.setAutoCommit(false);
             try (PreparedStatement up = conn.prepareStatement(updateAccountSql);
                  PreparedStatement ins = conn.prepareStatement(insertTxSql)) {
 
-                up.setBigDecimal(1, amount);
+                BigDecimal total = amount.add(fee);
+                up.setBigDecimal(1, total);
                 up.setObject(2, account.getId());
-                up.setBigDecimal(3, amount);
+                up.setBigDecimal(3, total);
                 int rows = up.executeUpdate();
                 if (rows != 1) throw new RuntimeException("Insufficient funds or account not found");
+
+                String curr = account.getCurrency() != null ? account.getCurrency().name() : "MAD";
+                Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
                 UUID txId = UUID.randomUUID();
                 ins.setObject(1, txId);
                 ins.setBigDecimal(2, amount);
-                String curr = account.getCurrency() != null ? account.getCurrency().name() : "MAD";
                 ins.setString(3, curr);
                 ins.setString(4, "WITHDRAW");
                 ins.setString(5, "SETTLED");
-                ins.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+                ins.setTimestamp(6, now);
                 ins.setObject(7, account.getId());
                 ins.executeUpdate();
+
+                if (fee.compareTo(BigDecimal.ZERO) > 0) {
+                    UUID feeId = UUID.randomUUID();
+                    ins.setObject(1, feeId);
+                    ins.setBigDecimal(2, fee);
+                    ins.setString(3, curr);
+                    ins.setString(4, "FEE");
+                    ins.setString(5, "SETTLED");
+                    ins.setTimestamp(6, now);
+                    ins.setObject(7, account.getId());
+                    ins.executeUpdate();
+                }
 
                 conn.commit();
                 conn.setAutoCommit(prevAuto);
@@ -141,7 +155,7 @@ public class TransactionRepositoryImplement implements TransactionRepository {
     }
 
     @Override
-    public void transferOut(Account from, Account to, BigDecimal amount) {
+    public void transferOut(Account from, Account to, BigDecimal amount, BigDecimal fee) {
         String debitSql = "UPDATE accounts SET balance = balance - ? WHERE id = ? AND balance >= ?";
         String creditSql = "UPDATE accounts SET balance = balance + ? WHERE id = ?";
         String insertSql = "INSERT INTO transactions(id, amount, currency, type, status, \"timestamp\", source_account_id, target_account_id) VALUES (?,?,?,?,?,?,?,?)";
@@ -152,9 +166,10 @@ public class TransactionRepositoryImplement implements TransactionRepository {
                  PreparedStatement credit = conn.prepareStatement(creditSql);
                  PreparedStatement ins = conn.prepareStatement(insertSql)) {
 
-                debit.setBigDecimal(1, amount);
+                BigDecimal total = amount.add(fee);
+                debit.setBigDecimal(1, total);
                 debit.setObject(2, from.getId());
-                debit.setBigDecimal(3, amount);
+                debit.setBigDecimal(3, total);
                 int rd = debit.executeUpdate();
                 if (rd != 1) throw new RuntimeException("Insufficient funds or source account not found");
 
@@ -166,8 +181,8 @@ public class TransactionRepositoryImplement implements TransactionRepository {
                 String curr = from.getCurrency().name();
                 Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
-                UUID inId = UUID.randomUUID();
-                ins.setObject(1, inId);
+                UUID outId = UUID.randomUUID();
+                ins.setObject(1, outId);
                 ins.setBigDecimal(2, amount);
                 ins.setString(3, curr);
                 ins.setString(4, "TRANSFER_OUT");
@@ -176,6 +191,19 @@ public class TransactionRepositoryImplement implements TransactionRepository {
                 ins.setObject(7, from.getId());
                 ins.setObject(8, to.getId());
                 ins.executeUpdate();
+
+                if (fee.compareTo(BigDecimal.ZERO) > 0) {
+                    UUID feeId = UUID.randomUUID();
+                    ins.setObject(1, feeId);
+                    ins.setBigDecimal(2, fee);
+                    ins.setString(3, curr);
+                    ins.setString(4, "FEE");
+                    ins.setString(5, "SETTLED");
+                    ins.setTimestamp(6, now);
+                    ins.setObject(7, from.getId());
+                    ins.setObject(8, null);
+                    ins.executeUpdate();
+                }
 
                 conn.commit();
                 conn.setAutoCommit(prev);

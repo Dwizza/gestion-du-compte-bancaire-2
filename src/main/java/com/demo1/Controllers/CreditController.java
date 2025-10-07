@@ -109,21 +109,47 @@ public class CreditController {
 
     public void ApproveCredits() {
         listPendingCredits();
-        System.out.print("Enter Credit ID to approve (blank to cancel): ");
+        System.out.print("Enter Credit ID to manage (blank to cancel): ");
         String id = scanner.nextLine().trim();
-        if (id.isEmpty()) { System.out.println("Cancelled."); return; }
+        if (id.isEmpty()) {
+            System.out.println("Cancelled.");
+            return;
+        }
+
         try {
             UUID creditId = UUID.fromString(id);
-            Credit approved = creditService.approveCredit(creditId);
-            if (approved != null) {
-                System.out.println("Approved: account credited.");
-            } else {
-                System.out.println("Credit not found.");
+
+            System.out.println("Choose an action: ");
+            System.out.println("1. Approve");
+            System.out.println("2. Reject");
+            System.out.print("Enter choice [1-2]: ");
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1":
+                    Credit approved = creditService.approveCredit(creditId);
+                    if (approved != null) {
+                        System.out.println("Approved: account credited.");
+                    } else {
+                        System.out.println("Credit not found or already processed.");
+                    }
+                    break;
+                case "2":
+                    Credit rejected = creditService.rejectCredit(creditId);
+                    if (rejected != null) {
+                        System.out.println("Credit has been rejected.");
+                    } else {
+                        System.out.println("Credit not found or already processed.");
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid choice. Action cancelled.");
+                    break;
             }
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid UUID.");
         } catch (Exception e) {
-            System.out.println("Approval failed: " + e.getMessage());
+            System.out.println("Operation failed: " + e.getMessage());
         }
     }
 }

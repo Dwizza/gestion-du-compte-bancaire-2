@@ -21,7 +21,7 @@ public class Credit {
     }
 
     public enum CreditStatus {
-        PENDING, ACTIVE, LATE, CLOSED
+        PENDING, ACTIVE, LATE, CLOSED, REJECTED
     }
 
     public enum Currency {
@@ -116,4 +116,3 @@ public class Credit {
                 '}';
     }
 }
-
